@@ -21,6 +21,7 @@ class Profile(models.Model):
     website = models.URLField(blank=True, null=True)
     orcid = models.CharField(max_length=20, blank=True,null=True)
     role = models.CharField(max_length=50, choices=ROLES_CHOICES)
+    subscribe_to_newsletter = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
