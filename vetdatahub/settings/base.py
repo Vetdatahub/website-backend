@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework',
     'accounts',
-    'community',
     'datasets',
     'vetdatahub',
 ]
@@ -74,12 +73,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'vetdatahub.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-    
 
 
 # Password validation
@@ -129,6 +122,4 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    
 }
-
