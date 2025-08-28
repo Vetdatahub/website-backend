@@ -16,11 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
+
+def health_check(request):
+    """Simple health check endpoint for deployment verification."""
+    return JsonResponse({'status': 'healthy', 'message': 'Application is running'})
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('health/', health_check, name='health_check'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/auth/',include('accounts.urls')),
+    path('api/accounts/',include('accounts.urls')),
     path('api/datasets/', include('datasets.urls')),
 ]
