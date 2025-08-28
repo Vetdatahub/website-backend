@@ -14,6 +14,13 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    raise ImportError("python-dotenv is required to load environment variables")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent

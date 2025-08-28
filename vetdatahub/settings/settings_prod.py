@@ -2,18 +2,11 @@
 import os
 from .base import *
 
-# Load environment variables from .env file
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    # python-dotenv not installed, continue without it
-    pass
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 if not SECRET_KEY:
     raise ValueError("DJANGO_SECRET_KEY environment variable is required for production")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
