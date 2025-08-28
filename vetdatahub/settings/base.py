@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # Third-party Apps
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'health_check',
     'compressor',
