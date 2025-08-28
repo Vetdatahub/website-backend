@@ -8,11 +8,13 @@ class SpecieListView(ListAPIView):
     queryset = Specie.objects.all()
     serializer_class = SpecieSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
 class CategoryListView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
 
 class DatasetListView(ListAPIView):

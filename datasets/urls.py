@@ -10,8 +10,8 @@ from datasets.views import (
 )
 
 urlpatterns = [
-    path('species/', SpecieListView.as_view(), name='specie-list'),
-    path('categories/', CategoryListView.as_view(), name='category-list'),
+    path('species', SpecieListView.as_view(), name='specie-list'),
+    path('categories', CategoryListView.as_view(), name='category-list'),
     path('', DatasetListView.as_view(), name='dataset-list'),
     path('<int:pk>/', DatasetDetailView.as_view(), name='dataset-detail'),
     path('create/', DatasetCreateView.as_view(), name='dataset-create'),
