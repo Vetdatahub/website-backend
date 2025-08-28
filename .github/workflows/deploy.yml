@@ -1,0 +1,260 @@
+name: VetDataHub Backend CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  DJANGO_SETTINGS_MODULE: 'vetdatahub.settings.settings_dev'
+
+jobs:
+  lint-and-format:
+    name: Lint and Format Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements/*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements/dev.txt
+        
+    - name: Run flake8 linting
+      run: |
+        flake8 --config=flake8-config .
+        
+    - name: Auto-fix formatting with black
+      run: |
+        black .
+        
+    - name: Auto-fix import sorting with isort
+      run: |
+        isort .
+        
+    - name: Check for formatting changes
+      id: verify-changed-files
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+          echo "Files were reformatted"
+          git status --porcelain
+        else
+          echo "changed=false" >> $GITHUB_OUTPUT
+          echo "No formatting changes needed"
+        fi
+        
+    - name: Commit and push formatting changes
+      if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'push'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "🎨 Auto-fix code formatting [skip ci]"
+        git push
+        
+    - name: Fail on formatting issues for PRs
+      if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'pull_request'
+      run: |
+        echo "❌ Code formatting issues found in PR. Please run 'black .' and 'isort .' locally and commit the changes."
+        exit 1
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements/dev.txt
+        
+    - name: Set up Django settings
+      run: |
+        echo "DJANGO_SETTINGS_MODULE=vetdatahub.settings.settings_dev" >> $GITHUB_ENV
+        
+    - name: Run Django migrations
+      run: |
+        python manage.py migrate --settings=vetdatahub.settings.settings_dev
+        
+    - name: Run tests with pytest
+      run: |
+        pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install safety and bandit
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety bandit
+        
+    - name: Run safety check for known vulnerabilities
+      run: |
+        safety check -r requirements/base.txt
+        safety check -r requirements/prod.txt
+        
+    - name: Run bandit security scan
+      run: |
+        bandit -r . -f json -o bandit-report.json || true
+        bandit -r . -f txt
+
+  deploy:
+    name: Deploy to DigitalOcean Droplet
+    runs-on: ubuntu-latest
+    needs: [test, security-scan, lint-and-format]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+        
+    - name: Add server to known hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.DO_SERVER_IP }} >> ~/.ssh/known_hosts
+        
+    - name: Deploy to server
+      run: |
+        ssh ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SERVER_IP }} << 'EOF'
+          set -e
+          
+          # Navigate to application directory
+          cd ${{ secrets.DO_APP_PATH }}
+          
+          # Pull latest changes
+          git pull origin main
+          
+          # Activate virtual environment
+          source venv/bin/activate
+          
+          # Install/update dependencies
+          pip install -r requirements-prod.txt
+          
+          # Create production environment file from GitHub secrets
+          echo "⚙️ Setting up production environment variables..."
+          echo "# Production Environment Variables (Generated from GitHub Secrets)" > .env
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST || 'localhost' }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT || '5432' }}" >> .env
+          echo "DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" >> .env
+          echo "STATIC_ROOT=/var/www/vetdatahub-backend/static" >> .env
+          echo "MEDIA_ROOT=/var/www/vetdatahub-backend/media" >> .env
+          echo "CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}" >> .env
+          
+          # Set proper permissions for .env file
+          chmod 600 .env
+          chown www-data:www-data .env
+          
+          # Run Django management commands
+          python manage.py collectstatic --noinput --settings=vetdatahub.settings.settings_prod
+          python manage.py migrate --settings=vetdatahub.settings.settings_prod
+          
+          # Restart application services
+          sudo systemctl restart gunicorn
+          sudo systemctl restart nginx
+          
+          # Check service status
+          sudo systemctl status gunicorn --no-pager
+          sudo systemctl status nginx --no-pager
+        EOF
+        
+    - name: Health check
+      run: |
+        sleep 30
+        curl -f ${{ secrets.DO_APP_URL || 'http://${{ secrets.DO_SERVER_IP }}' }}/health/ || exit 1
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "❌ Deployment failed!"
+        fi
+
+  rollback:
+    name: Rollback on Failure
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: failure() && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Setup SSH for rollback
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+        
+    - name: Add server to known hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.DO_SERVER_IP }} >> ~/.ssh/known_hosts
+        
+    - name: Rollback deployment
+      run: |
+        ssh ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SERVER_IP }} << 'EOF'
+          set -e
+          
+          cd ${{ secrets.DO_APP_PATH }}
+          
+          # Rollback to previous commit
+          git reset --hard HEAD~1
+          
+          # Restart services
+          sudo systemctl restart gunicorn
+          sudo systemctl restart nginx
+          
+          echo "🔄 Rollback completed"
+        EOF
