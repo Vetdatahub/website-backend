@@ -15,19 +15,35 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('avatar', models.ImageField(blank=True, null=True, upload_to='')),
-                ('bio', models.TextField(blank=True, null=True)),
-                ('affiliation', models.CharField(blank=True, max_length=200, null=True)),
-                ('location', models.CharField(blank=True, max_length=100, null=True)),
-                ('website', models.URLField(blank=True, null=True)),
-                ('orcid', models.CharField(blank=True, max_length=20, null=True)),
-                ('role', models.CharField(choices=[('researcher', 'Researcher'), ('practitioner', 'Practitioner  '), ('student', 'Student'), ('policy_analyst', 'Policy Analyst'), ('data_engineer', 'Data Engineer'), ('other', 'Other')], max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("avatar", models.ImageField(blank=True, null=True, upload_to="")),
+                ("bio", models.TextField(blank=True, null=True)),
+                ("affiliation", models.CharField(blank=True, max_length=200, null=True)),
+                ("location", models.CharField(blank=True, max_length=100, null=True)),
+                ("website", models.URLField(blank=True, null=True)),
+                ("orcid", models.CharField(blank=True, max_length=20, null=True)),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[
+                            ("researcher", "Researcher"),
+                            ("practitioner", "Practitioner  "),
+                            ("student", "Student"),
+                            ("policy_analyst", "Policy Analyst"),
+                            ("data_engineer", "Data Engineer"),
+                            ("other", "Other"),
+                        ],
+                        max_length=50,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+                ),
             ],
         ),
     ]

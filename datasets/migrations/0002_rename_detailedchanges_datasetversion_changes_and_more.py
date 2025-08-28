@@ -7,53 +7,63 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('datasets', '0001_initial'),
+        ("datasets", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='datasetversion',
-            old_name='detailedChanges',
-            new_name='changes',
+            model_name="datasetversion",
+            old_name="detailedChanges",
+            new_name="changes",
         ),
         migrations.RenameField(
-            model_name='datasetversion',
-            old_name='format',
-            new_name='filetype',
+            model_name="datasetversion",
+            old_name="format",
+            new_name="filetype",
         ),
         migrations.RemoveField(
-            model_name='datasetversion',
-            name='breakingChanges',
+            model_name="datasetversion",
+            name="breakingChanges",
         ),
         migrations.RemoveField(
-            model_name='datasetversion',
-            name='file',
+            model_name="datasetversion",
+            name="file",
         ),
         migrations.AddField(
-            model_name='datasetversion',
-            name='file_url',
-            field=models.URLField(default=''),
+            model_name="datasetversion",
+            name="file_url",
+            field=models.URLField(default=""),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='datasetversion',
-            name='filesize',
-            field=models.PositiveIntegerField(default=''),
+            model_name="datasetversion",
+            name="filesize",
+            field=models.PositiveIntegerField(default=""),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='dataset',
-            name='species',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='datasets_species', to='datasets.specie'),
+            model_name="dataset",
+            name="species",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="datasets_species",
+                to="datasets.specie",
+            ),
         ),
         migrations.AlterField(
-            model_name='datasetrating',
-            name='dataset',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='dataset_ratings', to='datasets.dataset'),
+            model_name="datasetrating",
+            name="dataset",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="dataset_ratings", to="datasets.dataset"
+            ),
         ),
         migrations.AlterField(
-            model_name='datasetversion',
-            name='dataset',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='dataset_versions', to='datasets.dataset'),
+            model_name="datasetversion",
+            name="dataset",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="dataset_versions", to="datasets.dataset"
+            ),
         ),
     ]

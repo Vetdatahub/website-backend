@@ -6,7 +6,7 @@ from accounts.models import User, Profile
 class UserDetailSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'profile', 'joined_date', 'first_name', 'last_name']
+        fields = ["id", "username", "email", "profile", "joined_date", "first_name", "last_name"]
 
 
 class RegisterUserSerializer(ModelSerializer):
@@ -16,24 +16,33 @@ class RegisterUserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'affiliation', 'role','subscribe_to_newsletter']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-        
+        fields = [
+            "username",
+            "email",
+            "password",
+            "first_name",
+            "last_name",
+            "affiliation",
+            "role",
+            "subscribe_to_newsletter",
+        ]
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        affiliation = validated_data.pop('affiliation')
-        role = validated_data.pop('role')
-        subscribe_to_newsletter = validated_data.pop('subscribe_to_newsletter')
+        affiliation = validated_data.pop("affiliation")
+        role = validated_data.pop("role")
+        subscribe_to_newsletter = validated_data.pop("subscribe_to_newsletter")
         user = User.objects.create_user(**validated_data)
-        Profile.objects.create(user=user, affiliation=affiliation, role=role, subscribe_to_newsletter=subscribe_to_newsletter)
+        Profile.objects.create(
+            user=user, affiliation=affiliation, role=role, subscribe_to_newsletter=subscribe_to_newsletter
+        )
         return user
 
 
 class ProfileSerializer(ModelSerializer):
     user = UserDetailSerializer(read_only=True)
+
     class Meta:
         model = Profile
-        fields = '__all__'
-        read_only_fields = ['user']  # prevent user field from being updated
+        fields = "__all__"
+        read_only_fields = ["user"]  # prevent user field from being updated

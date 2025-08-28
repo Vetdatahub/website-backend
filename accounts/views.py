@@ -6,6 +6,7 @@ from rest_framework import status
 from accounts.serializers import RegisterUserSerializer, ProfileSerializer
 from accounts.models import Profile
 from accounts.permissions import IsOwnerOrReadOnly
+
 # Create your views here.
 
 
@@ -19,11 +20,11 @@ class SignUpView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             data = {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'first_name': user.first_name,
-                'last_name': user.last_name
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
             }
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -33,7 +34,6 @@ class RetrieveProfileView(RetrieveAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Profile.objects.all()
-
 
 
 class UpdateProfileView(UpdateAPIView):

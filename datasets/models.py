@@ -14,7 +14,7 @@ class Specie(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -25,10 +25,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Dataset(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    species = models.ForeignKey(Specie, on_delete=models.CASCADE, null=True, blank=True, related_name='datasets_species')
+    species = models.ForeignKey(
+        Specie, on_delete=models.CASCADE, null=True, blank=True, related_name="datasets_species"
+    )
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     license = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
@@ -41,8 +44,9 @@ class Dataset(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class DatasetVersion(models.Model):
-    dataset = models.ForeignKey(Dataset,on_delete=models.CASCADE, related_name='dataset_versions')
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, related_name="dataset_versions")
     version_number = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -56,17 +60,14 @@ class DatasetVersion(models.Model):
 
 
 class DatasetRating(models.Model):
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, related_name='dataset_ratings')
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, related_name="dataset_ratings")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.IntegerField(validators=[
-        MinValueValidator(1),
-        MaxValueValidator(5)
-    ])
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('dataset', 'user')
+        unique_together = ("dataset", "user")
 
     def __str__(self):
         return f"{self.user.username} - {self.dataset.title} - {self.rating}"

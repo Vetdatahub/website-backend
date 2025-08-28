@@ -4,6 +4,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 SAFE_METHODS = ("GET", "HEAD", "OPTIONS")
 
+
 class CookieJWTAuthentication(JWTAuthentication):
     """
     Tries Authorization header first (standard SimpleJWT behavior),
@@ -12,7 +13,7 @@ class CookieJWTAuthentication(JWTAuthentication):
     """
 
     # Set your cookie names here if you like
-    access_cookie_name = "accessToken"   # e.g. 'access' or 'access_token'
+    access_cookie_name = "accessToken"  # e.g. 'access' or 'access_token'
 
     def authenticate(self, request):
         # 1) Try standard header-based auth

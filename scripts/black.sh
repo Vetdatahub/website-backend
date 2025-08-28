@@ -1,1 +1,1 @@
-black --line-length 117 --exclude '^.*\b(migrations)\b.*$' .
+black --line-length 117 --exclude '(\.venv|migrations)' .
