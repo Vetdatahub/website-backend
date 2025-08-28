@@ -40,5 +40,3 @@ class UpdateProfileView(UpdateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Profile.objects.all()
-
-
