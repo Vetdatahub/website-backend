@@ -1,0 +1,38 @@
+# Development dependencies
+-r base.txt
+
+# Testing
+pytest==7.4.3
+pytest-django==4.7.0
+
+# Code quality and formatting
+black==23.12.1
+flake8==6.1.0
+isort==5.13.2
+autopep8==2.0.4
+
+# Security and vulnerability scanning
+safety==2.3.5
+bandit==1.7.5
+
+# Development tools
+django-debug-toolbar==4.2.0
+django-extensions==3.2.3
+ipython==8.18.1
+ipdb==0.13.13
+
+# Documentation
+Sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
+
+# Coverage reporting
+coverage==7.3.4
+
+# HTTP client for testing
+requests==2.31.0
+
+# Pre-commit hooks
+pre-commit==3.6.0
+
+# Performance profiling
+django-silk==5.0.4

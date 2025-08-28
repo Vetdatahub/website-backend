@@ -1,0 +1,15 @@
+# Base dependencies required for all environments
+# Core Django and DRF
+Django==5.2.5
+djangorestframework==3.16.1
+djangorestframework-simplejwt==5.3.0
+
+
+# Media/Image handling
+Pillow==11.3.0
+
+# CORS handling
+django-cors-headers==4.3.1
+
+# Environment variable management
+python-decouple==3.8
