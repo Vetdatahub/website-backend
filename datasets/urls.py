@@ -1,12 +1,13 @@
 from django.urls import path
+
 from datasets.views import (
-    SpecieListView,
     CategoryListView,
-    DatasetListView,
-    DatasetDetailView,
     DatasetCreateView,
+    DatasetDetailView,
+    DatasetListView,
     DatasetRatingCreateView,
     DatasetVersionCreateView,
+    SpecieListView,
 )
 
 urlpatterns = [

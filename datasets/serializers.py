@@ -1,7 +1,8 @@
-from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueTogetherValidator
-from datasets.models import Dataset, DatasetRating, DatasetVersion, Specie, Category
+
+from datasets.models import Category, Dataset, DatasetRating, DatasetVersion, Specie
 
 
 class SpecieSerializer(ModelSerializer):

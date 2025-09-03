@@ -1,6 +1,6 @@
 from django.contrib import admin
-from datasets.models import Dataset, DatasetRating, DatasetVersion, Specie, Category
 
+from datasets.models import Category, Dataset, DatasetRating, DatasetVersion, Specie
 
 admin.site.register(Dataset)
 admin.site.register(DatasetVersion)

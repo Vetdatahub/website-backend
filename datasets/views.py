@@ -1,15 +1,16 @@
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from datasets.models import Dataset, DatasetRating, DatasetVersion, Specie, Category
+
+from datasets.models import Category, Dataset, DatasetRating, DatasetVersion, Specie
+from datasets.permissions import IsOwnerOrReadOnly
 from datasets.serializers import (
-    DatasetSerializer,
-    DatasetRatingSerializer,
-    DatasetVersionSerializer,
-    SpecieSerializer,
     CategorySerializer,
     CreateDatasetSerializer,
+    DatasetRatingSerializer,
+    DatasetSerializer,
+    DatasetVersionSerializer,
+    SpecieSerializer,
 )
-from datasets.permissions import IsOwnerOrReadOnly
 
 
 class SpecieListView(ListAPIView):

@@ -1,6 +1,7 @@
-from django.middleware.csrf import CsrfViewMiddleware
 from rest_framework import exceptions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from django.middleware.csrf import CsrfViewMiddleware
 
 SAFE_METHODS = ("GET", "HEAD", "OPTIONS")
 

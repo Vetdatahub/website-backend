@@ -1,11 +1,12 @@
-from rest_framework.views import APIView
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
-from accounts.serializers import RegisterUserSerializer, ProfileSerializer
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from accounts.models import Profile
 from accounts.permissions import IsOwnerOrReadOnly
+from accounts.serializers import ProfileSerializer, RegisterUserSerializer
 
 # Create your views here.
 

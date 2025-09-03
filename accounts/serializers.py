@@ -1,6 +1,7 @@
-from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from accounts.models import User, Profile
+from rest_framework.serializers import ModelSerializer
+
+from accounts.models import Profile, User
 
 
 class UserDetailSerializer(ModelSerializer):
