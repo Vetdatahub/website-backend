@@ -7,7 +7,15 @@ from accounts.models import Profile, User
 class UserDetailSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "email", "profile", "joined_date", "first_name", "last_name"]
+        fields = [
+            "id",
+            "username",
+            "email",
+            "profile",
+            "joined_date",
+            "first_name",
+            "last_name",
+        ]
 
 
 class RegisterUserSerializer(ModelSerializer):
@@ -35,7 +43,10 @@ class RegisterUserSerializer(ModelSerializer):
         subscribe_to_newsletter = validated_data.pop("subscribe_to_newsletter")
         user = User.objects.create_user(**validated_data)
         Profile.objects.create(
-            user=user, affiliation=affiliation, role=role, subscribe_to_newsletter=subscribe_to_newsletter
+            user=user,
+            affiliation=affiliation,
+            role=role,
+            subscribe_to_newsletter=subscribe_to_newsletter,
         )
         return user
 

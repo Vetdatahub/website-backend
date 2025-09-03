@@ -1,5 +1,5 @@
-from .base import BASE_DIR
 from .base import *  # noqa: F403,F401,F405
+from .base import BASE_DIR
 
 DATABASES = {
     "default": {

@@ -18,7 +18,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Category",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
                 ("description", models.TextField()),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
@@ -28,7 +36,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Specie",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
                 ("description", models.TextField()),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
@@ -38,7 +54,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Dataset",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("title", models.CharField(max_length=255)),
                 ("description", models.TextField()),
                 ("license", models.CharField(blank=True, max_length=255, null=True)),
@@ -46,21 +70,36 @@ class Migration(migrations.Migration):
                 ("startDate", models.DateField(blank=True, null=True)),
                 ("endDate", models.DateField(blank=True, null=True)),
                 ("sampleSize", models.IntegerField(blank=True, null=True)),
-                ("fundingSource", models.CharField(blank=True, max_length=255, null=True)),
-                ("ethicsApproval", models.CharField(blank=True, max_length=255, null=True)),
-                ("methodology", models.CharField(blank=True, max_length=255, null=True)),
+                (
+                    "fundingSource",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "ethicsApproval",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "methodology",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 (
                     "category",
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="datasets.category"
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="datasets.category",
                     ),
                 ),
                 (
                     "species",
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="datasets.specie"
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="datasets.specie",
                     ),
                 ),
             ],
@@ -68,7 +107,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="DatasetRating",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "rating",
                     models.IntegerField(
@@ -80,17 +127,34 @@ class Migration(migrations.Migration):
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
-                ("dataset", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="datasets.dataset")),
+                (
+                    "dataset",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="datasets.dataset",
+                    ),
+                ),
                 (
                     "user",
-                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
                 ),
             ],
         ),
         migrations.CreateModel(
             name="DatasetVersion",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("version_number", models.CharField(max_length=255, unique=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
@@ -98,7 +162,13 @@ class Migration(migrations.Migration):
                 ("format", models.CharField(max_length=100)),
                 ("detailedChanges", models.TextField(blank=True, null=True)),
                 ("breakingChanges", models.BooleanField()),
-                ("dataset", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="datasets.dataset")),
+                (
+                    "dataset",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="datasets.dataset",
+                    ),
+                ),
             ],
         ),
     ]

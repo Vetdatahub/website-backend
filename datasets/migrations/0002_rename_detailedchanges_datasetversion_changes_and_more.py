@@ -56,14 +56,18 @@ class Migration(migrations.Migration):
             model_name="datasetrating",
             name="dataset",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, related_name="dataset_ratings", to="datasets.dataset"
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="dataset_ratings",
+                to="datasets.dataset",
             ),
         ),
         migrations.AlterField(
             model_name="datasetversion",
             name="dataset",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, related_name="dataset_versions", to="datasets.dataset"
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="dataset_versions",
+                to="datasets.dataset",
             ),
         ),
     ]

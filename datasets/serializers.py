@@ -68,7 +68,11 @@ class DatasetRatingSerializer(ModelSerializer):
     class Meta:
         model = DatasetRating
         fields = "__all__"
-        validators = [UniqueTogetherValidator(queryset=DatasetRating.objects.all(), fields=["dataset", "user"])]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=DatasetRating.objects.all(), fields=["dataset", "user"]
+            )
+        ]
 
 
 class DatasetVersionSerializer(ModelSerializer):
