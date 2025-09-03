@@ -50,34 +50,20 @@ jobs:
         
     - name: Auto-fix import sorting with isort
       run: |
-        isort .
-        
-    - name: Check for formatting changes
-      id: verify-changed-files
+        isort .  
+   
+    - name: Check for modified files
+      id: git-check
+      run: echo "modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)" >> $GITHUB_OUTPUT
+
+    - name: Push changes
+      if: steps.git-check.outputs.modified == 'true'
       run: |
-        if [ -n "$(git status --porcelain)" ]; then
-          echo "changed=true" >> $GITHUB_OUTPUT
-          echo "Files were reformatted"
-          git status --porcelain
-        else
-          echo "changed=false" >> $GITHUB_OUTPUT
-          echo "No formatting changes needed"
-        fi
-        
-    - name: Commit and push formatting changes
-      if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'push'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "🎨 Auto-fix code formatting [skip ci]"
+        git config --global user.name 'Black'
+        git config --global user.email '<>'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git commit -am "chore: linting"
         git push
-        
-    - name: Fail on formatting issues for PRs
-      if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'pull_request'
-      run: |
-        echo "❌ Code formatting issues found in PR. Please run 'black .' and 'isort .' locally and commit the changes."
-        exit 1
 
   test:
     name: Run Tests
